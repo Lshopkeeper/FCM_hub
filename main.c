@@ -92,7 +92,7 @@ static void init_module(void)
     pwm_init();
     Init_PwmInput();
     //Init_InputCap();
-    wdt_init();
+//    wdt_init();
 
     init_tiu_task(dip_addr);
 }
@@ -150,8 +150,18 @@ void RegistIdleHookFunc()
 
 int main(void)
 {
+    //RCC->CSR |= (1<<24);
     init_module();
     ADC_Calibration();
+//    uint8_t buf[8] = {0};
+//    buf[3] = LL_BYTE(RCC->CSR);
+//    buf[2] = LH_BYTE(RCC->CSR);
+//    buf[1] = HL_BYTE(RCC->CSR);
+//    buf[0] = HH_BYTE(RCC->CSR);
+//
+//    send_msg_by_can(0x99,8,buf);
+//    rt_thread_mdelay(15000);
+
     RegistIdleHookFunc();
     create_tasks();
     while (1)
@@ -159,7 +169,7 @@ int main(void)
         //send_msg_by_can(0x99,8,0);
         if(FALSE == stop_feed_dog_flag)
         {
-            feed_dog();
+//            feed_dog();
         }
         TOGGLE_LED();
         rt_thread_mdelay(200);

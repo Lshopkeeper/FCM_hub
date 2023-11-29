@@ -168,7 +168,7 @@ static bool cold_control_process(void)
 /*根据温度获取风扇速度和油泵速度*/
 static void cold_speed_manage(rt_uint8_t* fun_speed,rt_uint8_t* pump_speed )
 {
-    rt_uint8_t cur_max_temp,final_temp;
+    rt_int8_t cur_max_temp,final_temp;
     static rt_uint8_t last_max_temp = 0;
 
     TERM_COMM_DATA *tiu_para;

@@ -39,7 +39,7 @@ static void period_process_temp_state(void)
     //PT1000实际温度有50偏移
     if((cur_max_temp-50) >= 95)//过温故障
     {
-        tiu_para->fcm_remote_signal_fault.sys_overtemp = 0x10;
+        tiu_para->fcm_remote_signal_fault.sys_overtemp = 0x02;
 
     }else if((cur_max_temp-50) >= 85){//过温告警
 
@@ -61,7 +61,7 @@ static void period_process_fun_bump_state(void)
     /*已经输出给风扇PWM*/
 	if(tiu_para->fcm_remote_measure.fun_speed != 0){
 		if(tiu_para->fcm_remote_measure.fun_pwm_speed == 0){  //实际转速等于0
-			if(fun_fault_cnt < 50){
+			if(fun_fault_cnt < 1000){
 				fun_fault_cnt++;
 				tiu_para->fcm_remote_signal_fault.fun_fault = 0;
 				rt_thread_mdelay(50);
@@ -81,7 +81,7 @@ static void period_process_fun_bump_state(void)
 	/*已经输出给电子泵PWM*/
 	if(tiu_para->fcm_remote_measure.bump_speed != 0){
 		if(tiu_para->fcm_remote_measure.bump_pwm_speed == 0){
-			if(bump_fault_cnt < 50){
+			if(bump_fault_cnt < 1000){
 				bump_fault_cnt++;
 				tiu_para->fcm_remote_signal_fault.bump_fault = 0;
 				rt_thread_mdelay(50);
@@ -113,7 +113,7 @@ static void period_process_press_leakage_state(void)
     {
     	//20230704 因自研和外购的差距圣工要求液压改完6，最大不超过7！！！
     	//过7会有问题，超出设备承载
-        if(g_get_ad_para.oil_press > 60){
+        if(g_get_ad_para.oil_press > 66){
             /*压力告警*/
 			if(fault_cnt < 25){
 				fault_cnt++;
@@ -127,6 +127,10 @@ static void period_process_press_leakage_state(void)
 			fault_cnt = 0;
             tiu_para->fcm_remote_signal_fault.press_alarm = 0;
         }
+    }else{
+        /*压力正常*/
+        fault_cnt = 0;
+        tiu_para->fcm_remote_signal_fault.press_alarm = 0;
     }
 }
 

@@ -228,16 +228,7 @@ void send_msg_by_can(rt_uint32_t pgn, rt_uint8_t len, rt_uint8_t * buf)
     id |= (uint32_t)dest_addr << 8;
     id |= src_addr;
 
-    struct rt_can_msg msg = {0};
-
-    msg.id = id;
-    msg.ide = RT_CAN_EXTID;     /* 扩展格式 */
-    msg.rtr = RT_CAN_DTR;       /* 数据帧 */
-    msg.len = 8;
-
-    rt_memcpy(msg.data, buf, len);
-    rt_device_write(can_dev, 0, &msg, sizeof(msg));
-    rt_thread_mdelay(100);
+    send_bms_can_msg(id,len,buf);
 
     return ;
 

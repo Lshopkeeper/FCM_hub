@@ -107,12 +107,25 @@ void ProcessIcValue(uint8_t* fun_speed_t, uint8_t* bump_speed_t)
 		*fun_speed_t = 255;
 	}else{
 		*fun_speed_t = (UINT8)(fun_pwm_value/2);
+
+        if(*fun_speed_t==0)
+            *fun_speed_t=0;
+        else
+            *fun_speed_t-=5;
 	}
 
 	if((ele_pwm_value/4) > 255){
 		*bump_speed_t = 255;
 	}else{
 		*bump_speed_t = (UINT8)(ele_pwm_value/4);
+		/*使用下述算法使得出转速与PWM y=(2/5)x-2*/
+        if(*bump_speed_t ==0)
+            *bump_speed_t=0;
+        else {
+            *bump_speed_t+=2;
+            *bump_speed_t*=5;
+            *bump_speed_t/=2;
+        }
 	}
 }
 
